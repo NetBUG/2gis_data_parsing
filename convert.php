@@ -21,14 +21,14 @@ $do_not_export = array("route_", "ctr_", "geo_", "chm_store", "org_banner",
 $filelist = array();
 
 if(strtolower($argv[1])!='') {
-	$filelist[] = array('name'=>'Download/'.$argv[1]);
+	$filelist[] = array('name'=>'download/'.$argv[1]);
 }
 else
 {
-	if($handle = opendir('Download')) {
+	if($handle = opendir('download')) {
     	while (false !== ($entry = readdir($handle))) {
 	        if ($entry!="." && $entry!=".." && strpos($entry,".dgdat")) {
-				$entry = 'Download/'.$entry;
+				$entry = 'download/'.$entry;
 				$filelist[] = array("name"=>$entry,"size"=>filesize($entry));
     	    }
 	    }

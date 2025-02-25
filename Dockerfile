@@ -14,7 +14,6 @@ WORKDIR /app
 
 # RUN git clone https://github.com/mbry/DgdatToXlsx
 RUN https://github.com/eugenemarenin/2gis_data_parsing .
-RUN mv download Download
 
 RUN php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');" && \
     php composer-setup.php && \
