@@ -498,3 +498,4 @@ function ReadString($len)
 	return "";
 }
 
+?>
