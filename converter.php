@@ -9,10 +9,11 @@ use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 /*
 * Source: https://github.com/mbry/DgdatToXlsx/
 * При использовании алгоритмов или части кода ссылка на первоисточник обязательна!
+* Migration: see https://github.com/PHPOffice/PhpSpreadsheet/blob/master/docs/topics/migration-from-PHPExcel.md
 */
 
 // Settings
-$skipped_columns = array("route_", "ctr_", "geo_", "chm_store", "org_banner", "back_splash", "banner_", "road_", "interchange_", "logo_picture", "pk_");
+$skipped_columns = array("route_", "ctr_", "chm_store", "org_banner", "back_splash", "banner_", "road_", "interchange_", "logo_picture", "pk_"); // geo_
 $default_input_folder = "download/"; // Default input file
 
 function get_files_list($argv, $input_folder) {
