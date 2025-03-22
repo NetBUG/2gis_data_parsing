@@ -8,7 +8,7 @@ Functions
 =================
 */
 
-function ProcessTable($srcfolder, $datadir, $name, $data)
+function ProcessTable($srcfolder, &$datadir, $name, $data)
 {
     global $skipped_columns;
 
@@ -40,7 +40,7 @@ function ProcessTable($srcfolder, $datadir, $name, $data)
 
 	if($chunk == "data") {
 	    $datadir[$name]["data"] = $zcv;
-	    //DexorTable($name, "", $p);
+	    //DexorTable($datadir, $srcfolder, $name, "", $p);
 	    return;
 	}
 
@@ -50,23 +50,21 @@ function ProcessTable($srcfolder, $datadir, $name, $data)
 	$p = substr($data,0,$size);
 	$data = substr($data,$size);
 
-	DexorTable($name, $chunk, $p, 0);
+	DexorTable($datadir, $srcfolder, $name, $chunk, $p, 0);
     }
 }
 
-function DexorTable($mainname, $fieldname, $data, $need_decode=1)
+function DexorTable(&$data_raw, $srcfolder, $mainname, $fieldname, $data, $need_decode=1)
 {
-    global $datadir, $srcfolder;
-
     $copy = $data;
 
 //	if($fieldname=="data") {
-//		$datadir[$mainname][$fieldname] = $data;
+//		$data_raw[$mainname][$fieldname] = $data;
 //		return;
 //	}
 
     if($fieldname!="")
-	$datadir[$mainname][$fieldname] = $data;
+	$data_raw[$mainname][$fieldname] = $data;
 
     $tbllen = GetPackedValue($data);
 
@@ -106,12 +104,17 @@ function ExportField($srcfolder, $data_raw, $name, $field, $need_decode=1, $pair
 
     $afield = array();
 
+    if (!array_key_exists($name, $data_raw)) {
+	print("Warning: cannot export field ".$name."->".$field.", skipping. Must be a mistake".PHP_EOL);
+	return null;
+    }
+
     $dat = $data_raw[$name][$field];
 
     if (strlen($dat) == 0)
 	die("Error.\n");
 
-    $dat = DexorTable($name, $field, $dat, $need_decode);
+    $dat = DexorTable($data_raw, $srcfolder, $name, $field, $dat, $need_decode);
 
     if($pair_decode==10) {
 	$i = 1;
