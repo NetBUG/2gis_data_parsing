@@ -74,21 +74,21 @@ function DexorTable($mainname, $fieldname, $data, $need_decode=1)
 	return "";
 
     $len = GetPackedValue($data);
-    $data = substr($data,$len);
+    $data = substr($data, $len);
     $len = GetPackedValue($data);
 
     $start = $tbllen+1;
 
-    for($i=$start; $i<$start+$len; $i++)
+    for ($i=$start; $i<$start+$len; $i++)
     {
 	$ch = $copy[$i];
 	$ch = unpack("C", $ch);
 	$ch = $ch[1];
 	if($need_decode==1) {
-	    $dat .= chr($ch ^ 0xC5);
+	    $data .= chr($ch ^ 0xC5);	# or new var $dat!
 	    $copy[$i]=chr($ch ^ 0xC5);
 	} else {
-	    $dat .= chr($ch);
+	    $data .= chr($ch);
 	    $copy[$i]=chr($ch);
 	}
     }
@@ -97,20 +97,18 @@ function DexorTable($mainname, $fieldname, $data, $need_decode=1)
     if($fieldname!="") $filename .= "-".$fieldname;
     file_put_contents($filename, $copy);
 
-    return $dat;
+    return $data;
 }
 
-function ExportField($name, $field, $need_decode=1, $pair_decode=0)
+function ExportField($srcfolder, $data_raw, $name, $field, $need_decode=1, $pair_decode=0)
 {
-    global $datadir;
-
-    echo "Export $name $fieldm type=$pair_decode\n";
+    echo "Export $name $field, type=$pair_decode\n";
 
     $afield = array();
 
-    $dat = $datadir[$name][$field];
+    $dat = $data_raw[$name][$field];
 
-    if(strlen($dat)==0)
+    if (strlen($dat) == 0)
 	die("Error.\n");
 
     $dat = DexorTable($name, $field, $dat, $need_decode);
@@ -128,7 +126,7 @@ function ExportField($name, $field, $need_decode=1, $pair_decode=0)
 	return $afield;
     }
 
-    if($pair_decode==1) {
+    if ($pair_decode==1) {
 	$i = 1;
 
 	for($k=0; $k<strlen($dat); $k++) {
