@@ -8,12 +8,11 @@ Functions
 =================
 */
 
-function ProcessTable($name, $data)
+function ProcessTable($srcfolder, $datadir, $name, $data)
 {
-    global $do_not_export, $srcfolder;
-    global $datadir;
+    global $skipped_columns;
 
-    foreach($do_not_export As $item) {
+    foreach($skipped_columns As $item) {
 	if (0 === strpos($name, $item)) {
 	    return;
 	}
@@ -39,7 +38,7 @@ function ProcessTable($name, $data)
 	$chunk = substr($tbl,0,$len);
 	$tbl = substr($tbl,$len);
 
-	if($chunk=="data") {
+	if($chunk == "data") {
 	    $datadir[$name]["data"] = $zcv;
 	    //DexorTable($name, "", $p);
 	    return;

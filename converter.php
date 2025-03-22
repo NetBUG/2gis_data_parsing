@@ -164,7 +164,7 @@ function load_file_data($srcfolder, $file) {
                 continue;
             }
         }
-        ProcessTable($srcfolder, $datadir,$chunk, $data);
+        ProcessTable($srcfolder, $datadir, $chunk, $data);
     }
 
     file_put_contents($srcfolder."cache", serialize($datadir));
