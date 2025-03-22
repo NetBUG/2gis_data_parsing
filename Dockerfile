@@ -13,7 +13,7 @@ RUN apt-get -y install php7.0 php7.2-curl php7.2-xml php7.2-mbstring
 WORKDIR /app
 
 # RUN git clone https://github.com/mbry/DgdatToXlsx
-RUN https://github.com/eugenemarenin/2gis_data_parsing .
+RUN git clone https://github.com/eugenemarenin/2gis_data_parsing .
 
 RUN php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');" && \
     php composer-setup.php && \
