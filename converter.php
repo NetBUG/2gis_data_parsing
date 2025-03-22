@@ -5,7 +5,7 @@ require_once('constants.php');
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 
-// Run: php -d short_open_tag=1 convert.php
+// Run: php -d short_open_tag=1 converter.php
 
 /*
 * Source: https://github.com/mbry/DgdatToXlsx/

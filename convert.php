@@ -1,7 +1,7 @@
 <?php
 
 require_once('vendor/autoload.php');
-
+print("This is an obsolete file with obsolete code.")
 
 /*
 =================
