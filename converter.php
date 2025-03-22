@@ -20,9 +20,10 @@ function get_files_list($argv, $input_folder) {
     $filelist = array();
     if (count($argv) > 1 && strtolower($argv[1]) != '') {
         print ("Processing single file from command line arguments: ".$argv[1]."\n");
-        return array('name'=>$input_folder.$argv[1]);
+        $fn = str_starts_with($argv[1], $input_folder) ? $argv[1] : $input_folder.$argv[1];
+        return array(array("name" => $fn));
     } else {
-    	if($handle = opendir($input_folder)) {
+        if($handle = opendir($input_folder)) {
             while (false !== ($entry = readdir($handle))) {
                 if ($entry!="." && $entry!=".." && strpos($entry, ".dgdat")) {
                     $entry = $input_folder.'/'.$entry;
@@ -31,7 +32,7 @@ function get_files_list($argv, $input_folder) {
             }
             closedir($handle);
         }
-    
+
         for ($i=0; $i<count($filelist); $i++)
         {
             for($j=0; $j<count($filelist); $j++)
@@ -51,10 +52,13 @@ function get_files_list($argv, $input_folder) {
 function load_file_data($srcfolder, $file) {
     global $skipped_columns;
     $fp = fopen($file, "rb");
+    if (!$fp) {
+        die("Could not open ".$file.PHP_EOL);
+    }
 
     $id = ReadLong($fp);
     $ef = ReadByte($fp);
-    
+
     if(dechex($id)!="46444707" || $ef!=239) {
         print("Error: ".$file." is not a 2gis data file. Stopping\n");
         return false;
@@ -172,11 +176,11 @@ function load_file_data($srcfolder, $file) {
     return $datadir;
 }
 
-
 function export_fields($srcfolder, &$data_raw) {
     global $fields_export_mapping;
 
     $dump = array();
+    print_r(array_keys($data_raw));
 
     foreach ($fields_export_mapping as $map) {
         if (count($map) < 4)
@@ -426,7 +430,8 @@ function save_table($srcfolder, &$dump, $fn = 0) {
         $n = 0;
 
         $address = $street_name;
-        if($building!="") $address = implode(", ",array($street_name,$building));
+        if($building != "") 
+            $address = implode(", ", array($street_name, $building));
 
         if($name[0] == "=")
             $name = substr($name, 1);
@@ -501,6 +506,7 @@ function save_table($srcfolder, &$dump, $fn = 0) {
 }
 
 $files = get_files_list($argv, $default_input_folder);
+
 foreach ($files as $file) {
     print("Processing file: ".$file['name']."\n");
     list($srcfolder, ) = explode("-", $file['name']);
@@ -510,12 +516,12 @@ foreach ($files as $file) {
     #   continue;
     print("Data loaded\n");
     # if(file_exists($srcfolder."prop"))
-	#   $prop = json_decode(file_get_contents($srcfolder."prop"), 1);
+    #   $prop = json_decode(file_get_contents($srcfolder."prop"), 1);
     # if(file_exists($srcfolder."cache_l2")) {
     #     $dump = json_decode(file_get_contents($srcfolder."cache_l2"),true);
     # if(file_exists($srcfolder."cache")) {
-	# $datadir = unserialize(file_get_contents($srcfolder."cache"));
-    
+    # $datadir = unserialize(file_get_contents($srcfolder."cache"));
+
     print("Processing data\n");
     // Process data
     $dump = export_fields($srcfolder, $data_raw);
