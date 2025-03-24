@@ -77,16 +77,17 @@ function DexorTable(&$data_raw, $srcfolder, $mainname, $fieldname, $data, $need_
 
     $start = $tbllen+1;
 
+    $dat = "";
     for ($i=$start; $i<$start+$len; $i++)
     {
 	$ch = $copy[$i];
 	$ch = unpack("C", $ch);
 	$ch = $ch[1];
 	if($need_decode==1) {
-	    $data .= chr($ch ^ 0xC5);	# or new var $dat!
+	    $dat .= chr($ch ^ 0xC5);	# or new var $dat!
 	    $copy[$i]=chr($ch ^ 0xC5);
 	} else {
-	    $data .= chr($ch);
+	    $dat .= chr($ch);
 	    $copy[$i]=chr($ch);
 	}
     }
@@ -95,7 +96,7 @@ function DexorTable(&$data_raw, $srcfolder, $mainname, $fieldname, $data, $need_
     if($fieldname!="") $filename .= "-".$fieldname;
     file_put_contents($filename, $copy);
 
-    return $data;
+    return $dat;
 }
 
 function ExportField($srcfolder, $data_raw, $name, $field, $need_decode=1, $pair_decode=0)
