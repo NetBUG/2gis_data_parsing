@@ -34,25 +34,25 @@ if(count($argv) > 1 && strtolower($argv[1])!='') {
 else
 {
     if($handle = opendir($default_folder)) {
-	while (false !== ($entry = readdir($handle))) {
+        while (false !== ($entry = readdir($handle))) {
             if ($entry!="." && $entry!=".." && strpos($entry,".dgdat")) {
-		$entry = $default_folder.'/'.$entry;
-		$filelist[] = array("name"=>$entry,"size"=>filesize($entry));
-	    }
+                $entry = $default_folder.'/'.$entry;
+                $filelist[] = array("name"=>$entry,"size"=>filesize($entry));
+            }
         }
         closedir($handle);
     }
 
     for($i=0; $i<count($filelist); $i++)
     {
-	for($j=0; $j<count($filelist); $j++)
-	{
-	    if($filelist[$i]["size"] < $filelist[$j]["size"]) {
-		$temp = $filelist[$i];
-		$filelist[$i] = $filelist[$j];
-		$filelist[$j] = $temp;
-	    }
-	}
+        for($j=0; $j<count($filelist); $j++)
+        {
+            if($filelist[$i]["size"] < $filelist[$j]["size"]) {
+            $temp = $filelist[$i];
+            $filelist[$i] = $filelist[$j];
+            $filelist[$j] = $temp;
+            }
+        }
     }
 }
 
@@ -146,9 +146,9 @@ while(strlen($tbl))
     $inset = array("name","cpt","fbn","lang","stat");
 
     if(in_array($chunk, $inset)) {
-	$temp = UnpackWideString($temp);
-	$prop[$chunk] = iconv("utf-16le", "utf-8", $temp);
-	file_put_contents($srcfolder.$chunk, $temp);
+    $temp = UnpackWideString($temp);
+    $prop[$chunk] = iconv("utf-16le", "utf-8", $temp);
+    file_put_contents($srcfolder.$chunk, $temp);
     }
 }
 
@@ -174,9 +174,9 @@ while(strlen($tbl))
     $startdir[] = array("name"=>$chunk,"size"=>$size,"offset"=>ftell($fp));
 
     if($chunk=="data")
-	$root = ftell($fp);
+    $root = ftell($fp);
     else if($chunk=="opt")
-	$optroot = ftell($fp);
+    $optroot = ftell($fp);
 
     $temp = ReadString($size);
 }
@@ -274,6 +274,11 @@ $dump["orgrub_rub"] = ExportField("org_rub", "rub", 0, 2);
 $dump["address_elem"] = ExportField("address_elem", "street", 0, 1);
 $dump["street"] = ExportField("street", "name", 1);
 $dump["street_city"] = ExportField("street", "city", 0, 1);
+
+# $dump["coord_x"] = ExportField("address_elem", "map_x", 0, 1);
+# $dump["coord_y"] = ExportField("address_elem", "map_y", 0, 1);
+# $dump["coord_z"] = ExportField("address_elem", "map_z", 0, 1);
+
 
 $dump["fil_contact_fil"] = ExportField("fil_contact", "fil", 0, 1);
 $dump["fil_contact_phone"] = ExportField("fil_contact", "phone");
@@ -390,7 +395,7 @@ foreach($dump["fil_org"] As $key=>$fil)
     if(array_key_exists($key, $dump['payment']) && $dump['payment'][$key])
         $payments = implode("\n", $dump['payment'][$key]);
     else
-	$payments = "";
+    $payments = "";
 
     $name = $dump["org"][$fil];
     $id = $dump["orgid"][$fil];
@@ -414,7 +419,7 @@ foreach($dump["fil_org"] As $key=>$fil)
     $cityname = array_key_exists($street_id, $dump["city"]) ? $dump["city"][$street_id] : "";
 
     if (!array_key_exists($cityname, $cities))
-	$cities[$cityname] = 0;
+    $cities[$cityname] = 0;
     $cities[$cityname]++;
 
     // Контакты
@@ -431,38 +436,38 @@ foreach($dump["fil_org"] As $key=>$fil)
 
     foreach($rows As $row)
     {
-	$type = chr($dump["fil_contact_type"][$row]);
-	if (!array_key_exists($type, $info))
-	    $info[ord($type)] = 0;
-	$info[ord($type)]++;
+    $type = chr($dump["fil_contact_type"][$row]);
+    if (!array_key_exists($type, $info))
+        $info[ord($type)] = 0;
+    $info[ord($type)]++;
 
-	if($type=='p') {
-	    $phone = $dump["fil_contact_phone"][$row];
-	    if($phone!='') {
-		$phones[] = $phone;
-	    }
-	}
+    if($type=='p') {
+        $phone = $dump["fil_contact_phone"][$row];
+        if($phone!='') {
+	$phones[] = $phone;
+        }
+    }
 
-	if($type=='f') {
-	    $phone = $dump["fil_contact_phone"][$row];
-	    if($phone!='') {
-		$faxes[] = $phone;
-	    }
-	}
+    if($type=='f') {
+        $phone = $dump["fil_contact_phone"][$row];
+        if($phone!='') {
+	$faxes[] = $phone;
+        }
+    }
 
-	$www = $dump["fil_contact_eaddr_name"][$row];
-	$www = mb_strtolower($www);
-	if($www!="")
-	    $wwws[] = $www;
+    $www = $dump["fil_contact_eaddr_name"][$row];
+    $www = mb_strtolower($www);
+    if($www!="")
+        $wwws[] = $www;
 
-	$eaddr = mb_strtolower($dump["fil_contact_eaddr"][$row]);
+    $eaddr = mb_strtolower($dump["fil_contact_eaddr"][$row]);
 
-	if($type=='m')
-	    $emails[] = $eaddr;
+    if($type=='m')
+        $emails[] = $eaddr;
 
-	if(in_array($type,array('t','v','a','n','s','i','j'))) {
-	    $links[$type][] = $dump["fil_contact_eaddr"][$row];
-	}
+    if(in_array($type,array('t','v','a','n','s','i','j'))) {
+        $links[$type][] = $dump["fil_contact_eaddr"][$row];
+    }
     }
 
     // Рубрики
@@ -476,27 +481,27 @@ foreach($dump["fil_org"] As $key=>$fil)
     $rows2 = array_key_exists($fil, $dump["filrub_fil2"]) ? $dump["filrub_fil2"][$fil] : [];
 
     foreach($rows As $row) {
-	$rubid = $dump["orgrub_rub"][$row];
+        $rubid = $dump["orgrub_rub"][$row];
 
-	$rubs3[] = $dump["rub3_name"][$rubid];
+        $rubs3[] = $dump["rub3_name"][$rubid];
 
-	$rub2id = $dump["rub3_rub2"][$rubid];
-	$rubs2[] = $dump["rub2_name"][$rub2id];
+        $rub2id = $dump["rub3_rub2"][$rubid];
+        $rubs2[] = $dump["rub2_name"][$rub2id];
 
-	$rub1id = $dump["rub2_rub1"][$rub2id];
-	$rubs1[] = $dump["rub1_name"][$rub1id];
+        $rub1id = $dump["rub2_rub1"][$rub2id];
+        $rubs1[] = $dump["rub1_name"][$rub1id];
     }
 
     foreach($rows2 As $row) {
-	$rubid = $dump["filrub_rub"][$row];
+        $rubid = $dump["filrub_rub"][$row];
 
-	$rubs3[] = $dump["rub3_name"][$rubid];
+        $rubs3[] = $dump["rub3_name"][$rubid];
 
-	$rub2id = $dump["rub3_rub2"][$rubid];
-	$rubs2[] = $dump["rub2_name"][$rub2id];
+        $rub2id = $dump["rub3_rub2"][$rubid];
+        $rubs2[] = $dump["rub2_name"][$rub2id];
 
-	$rub1id = $dump["rub2_rub1"][$rub2id];
-	$rubs1[] = $dump["rub1_name"][$rub1id];
+        $rub1id = $dump["rub2_rub1"][$rub2id];
+        $rubs1[] = $dump["rub1_name"][$rub1id];
     }
 
     $rubs3 = array_unique($rubs3);
@@ -527,23 +532,23 @@ foreach($dump["fil_org"] As $key=>$fil)
     $wrk = '';
 
     if($worktime != '') {
-	$xml = simplexml_load_string($worktime);
-	foreach($xml->day as $day) {
-	    if(isset($day->working_hours)) {
-		$wrk .= $day->attributes()->label.": ";
+        $xml = simplexml_load_string($worktime);
+        foreach($xml->day as $day) {
+            if(isset($day->working_hours)) {
+                $wrk .= $day->attributes()->label.": ";
 
-		foreach($day->working_hours as $working_hours) {
-		    $wrk .= $working_hours->attributes()->from." - ";
-		    $wrk .= $working_hours->attributes()->to." ";
-		}
+                foreach($day->working_hours as $working_hours) {
+                    $wrk .= $working_hours->attributes()->from." - ";
+                    $wrk .= $working_hours->attributes()->to." ";
+                }
 
-		$wrk .= "\n";
-	    }
-	}
+                $wrk .= "\n";
+            }
+        }
     }
 
     $wrk = str_replace(array('Mon','Tue','Wed','Thu','Fri','Sat','Sun'),
-	    array('Пн','Вт','Ср','Чт','Пт','Сб','Вс'), $wrk);
+        array('Пн','Вт','Ср','Чт','Пт','Сб','Вс'), $wrk);
 
     $wrk = trim($wrk);
 
@@ -553,17 +558,17 @@ foreach($dump["fil_org"] As $key=>$fil)
     if($building!="") $address = implode(", ",array($street_name,$building));
 
     if($name[0] == "=")
-	$name = substr($name, 1);
+    $name = substr($name, 1);
 
     if($prev_id == $id) {
-	if($emails == '') $emails = $prev_emails;
-	if($wwws == '') $wwws = $prev_wwws;
-	if($vk == '') $vk = $prev_vk;
-	if($twitter == '') $twitter = $prev_twitter;
-	if($fb == '') $fb = $prev_fb;
-	if($insta == '') $insta = $prev_insta;
-	if($skype == '') $skype = $prev_skype;
-	if($icq == '') $skype = $prev_icq;
+        if($emails == '') $emails = $prev_emails;
+        if($wwws == '') $wwws = $prev_wwws;
+        if($vk == '') $vk = $prev_vk;
+        if($twitter == '') $twitter = $prev_twitter;
+        if($fb == '') $fb = $prev_fb;
+        if($insta == '') $insta = $prev_insta;
+        if($skype == '') $skype = $prev_skype;
+        if($icq == '') $skype = $prev_icq;
     }
 
     $bld_purpose_id = array_key_exists($key, $dump['bld_purpose_x']) ? $dump['bld_purpose_x'][$key] : -1;
@@ -610,12 +615,12 @@ foreach($dump["fil_org"] As $key=>$fil)
     $prev_jabber = $jabber;
 
     if($i==50000) {
-	$fn++;
+        $fn++;
         $writer = new Xlsx($spreadsheet);
-        $filename = rtrim($srcfolder,"/").($fn > 0 ? '_'.$fn : '').".xlsx";
+        $filename = rtrim($srcfolder, "/").($fn > 0 ? '_'.$fn : '').".xlsx";
         $writer->save($filename);
 
-	// Create new PHPExcel object
+    // Create new PHPExcel object
         $spreadsheet = new Spreadsheet();
 
         $sheet = $spreadsheet->getActiveSheet();
@@ -628,37 +633,37 @@ foreach($dump["fil_org"] As $key=>$fil)
         $defaultStyle->getAlignment()->setVertical(\PhpOffice\PhpSpreadsheet\Style\Alignment::VERTICAL_TOP);
         $defaultStyle->getAlignment()->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_LEFT);
         
-	$iterator = 0;
+    $iterator = 0;
 
-	foreach($cols As $colname=>$width) {
+    foreach($cols As $colname=>$width) {
             $sheet->setCellValue([$iterator + 1, 1], $colname);
             $sheet->getColumnDimension(chr(65+$iterator))->setWidth($width);
                 $iterator++;
-	}
+    }
 
-	$sheet->getRowDimension(1)->setRowHeight(50);
-	$sheet->freezePane('A2');
+    $sheet->getRowDimension(1)->setRowHeight(50);
+    $sheet->freezePane('A2');
 
-	$maxcolumn = chr($iterator+64);
+    $maxcolumn = chr($iterator+64);
 
-	$sheet->setAutoFilter('A1:'.$maxcolumn.'1');
-	$header = $sheet->getStyle("A1:".$maxcolumn."1");
+    $sheet->setAutoFilter('A1:'.$maxcolumn.'1');
+    $header = $sheet->getStyle("A1:".$maxcolumn."1");
         $header->getFont()->getColor()->setARGB(\PhpOffice\PhpSpreadsheet\Style\Color::COLOR_BLUE);
         $header->getAlignment()->setVertical(\PhpOffice\PhpSpreadsheet\Style\Alignment::VERTICAL_CENTER);
         $header->getFill()->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID);
         $header->getFill()->getStartColor()->setARGB("ffc4d79b");
 
-	$i = 2;
+    $i = 2;
     }
 
     if($i%1000==0)
-	echo "$i/$max\r";
+    echo "$i/$max\r";
 }
 
 print "Saving file ".rtrim($srcfolder,"/").".xlsx ";
 
 $writer = new Xlsx($spreadsheet);
-$filename = rtrim($srcfolder,"/").($fn > 0 ? '_'.$fn : '').".xlsx";
+$filename = rtrim($srcfolder,"/").($fn > 0 ? '_'.$fn + 1 : '').".xlsx";
 $writer->save($filename);
 
 
